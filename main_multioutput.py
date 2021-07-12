@@ -14,7 +14,7 @@ warnings.filterwarnings('ignore')
 
 batchsz = 4
 lr = 1e-4
-epochs = 4
+epochs = 50
 
 device = torch.device('cuda')
 torch.manual_seed(1234)
