@@ -359,7 +359,7 @@ class HighResolutionNet(nn.Module):
             nn.Sigmoid()
         )
 
-        self.center_guide_spatial_module = _CenterGuidedSpatialModule(channel=pre_stage_channels[0])
+        self.center_information_extraction_module = _CenterInformationExtractionModule(channel=pre_stage_channels[0])
         self.center_guide_channel_module_0 = _CenterGuidedChannelModule(channel=pre_stage_channels[0])
         self.center_guide_channel_module_1 = _CenterGuidedChannelModule(channel=pre_stage_channels[1])
         self.center_guide_channel_module_2 = _CenterGuidedChannelModule(channel=pre_stage_channels[2])
@@ -513,7 +513,7 @@ class HighResolutionNet(nn.Module):
         x1 = F.interpolate(x[1], size=(x0_h, x0_w), mode='bilinear', align_corners=False)
         x2 = F.interpolate(x[2], size=(x0_h, x0_w), mode='bilinear', align_corners=False)
         x3 = F.interpolate(x[3], size=(x0_h, x0_w), mode='bilinear', align_corners=False)
-        skl_feature = self.center_guide_spatial_module(skl)
+        skl_feature = self.center_information_extraction_module(skl)
         x0 = self.center_guide_channel_module_0(x0, skl_feature)
         x1 = self.center_guide_channel_module_1(x1, skl_feature)
         x2 = self.center_guide_channel_module_2(x2, skl_feature)
@@ -546,9 +546,9 @@ class _CenterGuidedChannelModule(nn.Module):
         return x
 
 
-class _CenterGuidedSpatialModule(nn.Module):
+class _CenterInformationExtractionModule(nn.Module):
     def __init__(self, channel):
-        super(_CenterGuidedSpatialModule, self).__init__()
+        super(_CenterInformationExtractionModule, self).__init__()
         self.conv_stage1_1 = nn.Sequential(nn.Conv2d(channel, 2 * channel, 3, padding=1, bias=True),
                                            gn(2 * channel))
         self.conv_stage1_2 = nn.Sequential(nn.Conv2d(channel, 2 * channel, 3, padding=1, bias=True),
